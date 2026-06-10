@@ -396,7 +396,11 @@ document.addEventListener('DOMContentLoaded', () => {
       // --- BƯỚC 3: Tạo và xuất file Word .docx ---
       log('Đang khởi tạo cấu trúc tài liệu Word...', 'info');
       
-      const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } = window.docx;
+      const docxObj = window.docx || docx;
+      if (!docxObj) {
+        throw new Error('Không thể tải thư viện docx từ CDN. Vui lòng kiểm tra lại kết nối mạng hoặc thử tải lại trang.');
+      }
+      const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } = docxObj;
       const docElements = [];
 
       chaptersData.forEach((chap, idx) => {
