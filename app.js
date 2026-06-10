@@ -396,7 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // --- BƯỚC 3: Tạo và xuất file Word .docx ---
       log('Đang khởi tạo cấu trúc tài liệu Word...', 'info');
       
-      const docxObj = window.docx || docx;
+      const docxObj = window.docx || (typeof docx !== 'undefined' ? docx : null);
       if (!docxObj) {
         throw new Error('Không thể tải thư viện docx từ CDN. Vui lòng kiểm tra lại kết nối mạng hoặc thử tải lại trang.');
       }
