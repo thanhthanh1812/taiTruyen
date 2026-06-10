@@ -405,3 +405,15 @@ footer a {
 footer a:hover {
   text-decoration: underline;
 }
+
+.version-badge {
+  display: inline-block;
+  background-color: #e0e7ff;
+  color: #4338ca;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
