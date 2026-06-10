@@ -1,3 +1,5 @@
+import * as docx from 'https://cdn.jsdelivr.net/npm/docx@8.5.0/+esm';
+
 // Cloudflare Worker code for the display and copy button
 const WORKER_CODE = `/**
  * Cloudflare Worker CORS Proxy with Custom Cookie Support
@@ -396,11 +398,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // --- BƯỚC 3: Tạo và xuất file Word .docx ---
       log('Đang khởi tạo cấu trúc tài liệu Word...', 'info');
       
-      const docxObj = window.docx || (typeof docx !== 'undefined' ? docx : null);
-      if (!docxObj) {
-        throw new Error('Không thể tải thư viện docx từ CDN. Vui lòng kiểm tra lại kết nối mạng hoặc thử tải lại trang.');
-      }
-      const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } = docxObj;
+      const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } = docx;
       const docElements = [];
 
       chaptersData.forEach((chap, idx) => {
