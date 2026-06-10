@@ -246,7 +246,20 @@ document.addEventListener('DOMContentLoaded', () => {
           
           const listGroup = docHTML.getElementById('dsc');
           if (!listGroup) {
-            log(`Không tìm thấy danh sách chương tại trang ${page}. Vui lòng kiểm tra lại Cookie hoặc ID truyện.`, 'error');
+            const pageTitle = docHTML.title || 'Không có tiêu đề';
+            // Extract a clean text preview from body
+            let bodyText = '';
+            if (docHTML.body) {
+              bodyText = docHTML.body.innerText || docHTML.body.textContent || '';
+              bodyText = bodyText.replace(/\s+/g, ' ').trim().substring(0, 200);
+            } else {
+              bodyText = 'Không tìm thấy thẻ body';
+            }
+            
+            log(`[Lỗi] Không tìm thấy danh sách chương (#dsc) tại trang ${page}.`, 'error');
+            log(`[Chi tiết phản hồi] HTTP: ${res.status} | Tiêu đề trang: "${pageTitle}" | Độ dài HTML: ${htmlText.length} ký tự.`, 'warning');
+            log(`[Xem trước nội dung]: "${bodyText}..."`, 'warning');
+            log(`Gợi ý: Nếu trang yêu cầu đăng nhập, có thể Cookie của bạn đã hết hạn hoặc sai định dạng. Nếu gặp lỗi Access Denied, vui lòng bật extension CORS.`, 'info');
             break;
           }
 
