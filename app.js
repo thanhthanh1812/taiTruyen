@@ -85,6 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const storyIdInput = document.getElementById('storyId');
   const totalPagesInput = document.getElementById('totalPages');
   const fileNameInput = document.getElementById('fileName');
+  const useProxyCheckbox = document.getElementById('useProxy');
+  const proxyUrlGroup = document.getElementById('proxyUrlGroup');
   const proxyUrlInput = document.getElementById('proxyUrl');
   
   const downloadBtn = document.getElementById('downloadBtn');
@@ -109,6 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
     storyId: localStorage.getItem('tr_storyId') || '',
     totalPages: localStorage.getItem('tr_totalPages') || '2',
     fileName: localStorage.getItem('tr_fileName') || '',
+    useProxy: localStorage.getItem('tr_useProxy') === 'true',
     proxyUrl: localStorage.getItem('tr_proxyUrl') || ''
   };
 
@@ -117,7 +120,19 @@ document.addEventListener('DOMContentLoaded', () => {
   storyIdInput.value = savedConfig.storyId;
   totalPagesInput.value = savedConfig.totalPages;
   fileNameInput.value = savedConfig.fileName;
+  useProxyCheckbox.checked = savedConfig.useProxy;
   proxyUrlInput.value = savedConfig.proxyUrl;
+
+  // Toggle Proxy URL field visibility based on checkbox
+  const toggleProxyVisibility = () => {
+    if (useProxyCheckbox.checked) {
+      proxyUrlGroup.style.display = 'block';
+    } else {
+      proxyUrlGroup.style.display = 'none';
+    }
+  };
+  toggleProxyVisibility();
+  useProxyCheckbox.addEventListener('change', toggleProxyVisibility);
 
   // Toggle Accordion Instructions
   accordion.querySelector('.accordion-header').addEventListener('click', () => {
@@ -170,10 +185,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const storyId = storyIdInput.value.trim();
     const totalPages = parseInt(totalPagesInput.value.trim(), 10);
     let fileName = fileNameInput.value.trim();
-    let proxyUrl = proxyUrlInput.value.trim();
+    const useProxy = useProxyCheckbox.checked;
+    let proxyUrl = useProxy ? proxyUrlInput.value.trim() : '';
 
     if (!cookieName || !cookieValue || !storyId || isNaN(totalPages) || !fileName) {
       log('Vui lòng điền đầy đủ thông tin Cookie, ID truyện, Số trang và Tên file!', 'error');
+      return;
+    }
+
+    if (useProxy && !proxyUrl) {
+      log('Vui lòng điền địa chỉ CORS Proxy!', 'error');
       return;
     }
 
@@ -189,12 +210,23 @@ document.addEventListener('DOMContentLoaded', () => {
       proxyUrl = proxyUrl.slice(0, -1);
     }
 
+    // Warn about cors-anywhere.herokuapp.com limitations
+    if (proxyUrl && proxyUrl.includes('cors-anywhere.herokuapp.com')) {
+      log('[Cảnh báo] Proxy công cộng cors-anywhere.herokuapp.com không hỗ trợ chuyển tiếp Cookie đăng nhập và sẽ bị lỗi 403. Vui lòng tự tạo Cloudflare Worker cá nhân (Cách 2) hoặc dùng Extension CORS trên Chrome và ĐỂ TRỐNG ô này (Cách 1)!', 'error');
+      downloadBtn.disabled = false;
+      downloadBtn.classList.remove('loading');
+      btnText.textContent = 'Tải Truyện và Xuất Word';
+      consoleStatusDot.className = 'console-dot error';
+      return;
+    }
+
     // Save configurations to localStorage
     localStorage.setItem('tr_cookieName', cookieName);
     localStorage.setItem('tr_cookieValue', cookieValue);
     localStorage.setItem('tr_storyId', storyId);
     localStorage.setItem('tr_totalPages', totalPages.toString());
     localStorage.setItem('tr_fileName', fileName);
+    localStorage.setItem('tr_useProxy', useProxy.toString());
     localStorage.setItem('tr_proxyUrl', proxyUrl);
 
     // Update UI to loading state

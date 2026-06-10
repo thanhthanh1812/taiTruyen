@@ -47,9 +47,14 @@
             <input type="text" id="fileName" placeholder="Ví dụ: Truyen_Hay.docx" required>
           </div>
 
-          <div class="form-group">
-            <label for="proxyUrl">Địa chỉ CORS Proxy (Cloudflare Worker URL - Không bắt buộc)</label>
-            <input type="url" id="proxyUrl" placeholder="Bỏ trống nếu sử dụng Extension bypass CORS">
+          <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; height: 100%; padding-top: 1.7rem;">
+            <input type="checkbox" id="useProxy" style="width: 18px; height: 18px; cursor: pointer; margin: 0;">
+            <label for="useProxy" style="margin-bottom: 0; cursor: pointer; user-select: none; font-weight: 500;">Sử dụng CORS Proxy (Cloudflare)</label>
+          </div>
+
+          <div class="form-group full-width" id="proxyUrlGroup" style="display: none;">
+            <label for="proxyUrl">Địa chỉ CORS Proxy (Cloudflare Worker URL)</label>
+            <input type="url" id="proxyUrl" placeholder="Ví dụ: https://my-proxy.yourname.workers.dev">
           </div>
 
         </div>
