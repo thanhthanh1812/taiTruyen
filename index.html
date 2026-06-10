@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trình Tải Truyện Hùng Bá - Giao Diện Web</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Import docx.js library from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/docx@8.2.0/build/index.umd.min.js"></script>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>TruyenHDC Downloader</h1>
+      <p>Tải truyện từ trang quản lý truyện sang file Word (.docx) trực tiếp trên trình duyệt</p>
+    </header>
+
+    <div class="card">
+      <div class="card-title">Cấu Hình Tải Truyện</div>
+      
+      <form id="crawlerForm" onsubmit="event.preventDefault();">
+        <div class="form-grid">
+          
+          <div class="form-group">
+            <label for="cookieName">Tên Cookie (Cookie Name)</label>
+            <input type="text" id="cookieName" placeholder="Ví dụ: wordpress_logged_in_fc056e1f7bf1..." required>
+          </div>
+
+          <div class="form-group">
+            <label for="cookieValue">Giá trị Cookie (Cookie Value)</label>
+            <input type="text" id="cookieValue" placeholder="Nhập giá trị cookie (chuỗi token dài)..." required>
+          </div>
+
+          <div class="form-group">
+            <label for="storyId">ID Truyện (Story ID)</label>
+            <input type="text" id="storyId" placeholder="Ví dụ: 16756956" required>
+          </div>
+
+          <div class="form-group">
+            <label for="totalPages">Số trang danh sách chương</label>
+            <input type="number" id="totalPages" min="1" max="100" value="2" required>
+          </div>
+
+          <div class="form-group">
+            <label for="fileName">Tên file khi tải xuống (.docx)</label>
+            <input type="text" id="fileName" placeholder="Ví dụ: Truyen_Hay.docx" required>
+          </div>
+
+          <div class="form-group">
+            <label for="proxyUrl">Địa chỉ CORS Proxy (Cloudflare Worker URL)</label>
+            <input type="url" id="proxyUrl" placeholder="Ví dụ: https://my-proxy.yourname.workers.dev" required>
+          </div>
+
+        </div>
+
+        <div class="btn-container">
+          <button type="button" id="downloadBtn" class="btn">
+            <span class="spinner"></span>
+            <span id="btnText">Tải Truyện và Xuất Word</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Console Log Panel -->
+    <div class="card" style="padding: 1.5rem;">
+      <div class="console-header">
+        <div class="console-title">
+          <span id="consoleStatusDot" class="console-dot idle"></span>
+          <span>TIẾN TRÌNH TẢI (CONSOLE LOG)</span>
+        </div>
+        <button id="clearConsoleBtn" class="console-clear-btn">Xóa log</button>
+      </div>
+      <div class="console-container">
+        <div id="consoleBody" class="console-body">
+<span class="console-line info">[Hệ thống] Sẵn sàng. Nhập thông tin cấu hình và nhấn nút để bắt đầu.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Instructions Accordion -->
+    <div class="accordion" id="instructionAccordion">
+      <div class="accordion-header">
+        <h3>Hướng dẫn thiết lập Proxy & Lấy Cookie</h3>
+        <span class="accordion-icon">▼</span>
+      </div>
+      <div class="accordion-content">
+        <div class="instructions-body">
+          <h4>Bước 1: Tạo Cloudflare Worker làm Proxy (Bắt buộc để vượt lỗi CORS)</h4>
+          <p>Vì trình duyệt chặn các request trực tiếp đến domain khác (CORS) và không cho tự set Cookie, bạn cần tạo 1 Cloudflare Worker làm trung chuyển (hoàn toàn miễn phí):</p>
+          <ol>
+            <li>Truy cập <a href="https://dash.cloudflare.com/" target="_blank">Cloudflare Dashboard</a> và đăng nhập (hoặc đăng ký miễn phí).</li>
+            <li>Chọn <strong>Workers & Pages</strong> -> Click <strong>Create application</strong> -> <strong>Create Worker</strong>.</li>
+            <li>Đặt tên cho Worker của bạn (ví dụ: <code>truyen-proxy</code>) rồi bấm <strong>Deploy</strong>.</li>
+            <li>Sau khi deploy, bấm vào nút <strong>Edit code</strong>.</li>
+            <li>Copy toàn bộ đoạn code dưới đây và dán đè vào file <code>worker.js</code> trong giao diện Cloudflare:</li>
+          </ol>
+
+          <div class="code-block-container">
+            <button id="copyWorkerCodeBtn" class="copy-btn">Copy code</button>
+            <pre id="workerCodeBlock" class="code-block">Loading worker code...</pre>
+          </div>
+
+          <ol start="6">
+            <li>Bấm nút <strong>Save and deploy</strong> ở góc trên bên phải màn hình Cloudflare.</li>
+            <li>Copy đường dẫn URL của Worker (ví dụ: <code>https://truyen-proxy.account.workers.dev</code>) và dán vào ô <strong>Địa chỉ CORS Proxy</strong> trên giao diện web này.</li>
+          </ol>
+
+          <h4>Bước 2: Cách lấy Cookie từ trình duyệt</h4>
+          <ol>
+            <li>Truy cập trang web <strong>truyenhdc.com</strong> và đăng nhập tài khoản của bạn.</li>
+            <li>Nhấn phím <code>F12</code> (hoặc chuột phải -> <code>Inspect / Kiểm tra</code>) để mở DevTools.</li>
+            <li>Chuyển qua tab <strong>Application</strong> (trên Chrome/Edge) hoặc tab <strong>Storage</strong> (trên Firefox).</li>
+            <li>Ở menu bên trái, tìm mục <strong>Cookies</strong> và chọn <code>https://truyenhdc.com</code>.</li>
+            <li>Tìm Cookie có tên bắt đầu bằng <code>wordpress_logged_in_...</code>:
+              <ul>
+                <li>Copy tên đó (ví dụ: <code>wordpress_logged_in_fc056e1f7bf1317b0c2c528e1dc3e0ac</code>) dán vào ô <strong>Tên Cookie</strong>.</li>
+                <li>Copy giá trị dài ngoằng của Cookie đó dán vào ô <strong>Giá trị Cookie</strong>.</li>
+              </ul>
+            </li>
+          </ol>
+
+          <h4>Bước 3: Deploy web lên GitHub Pages</h4>
+          <ol>
+            <li>Tạo một repository mới trên GitHub và upload các file (<code>index.html</code>, <code>style.css</code>, <code>app.js</code>) lên.</li>
+            <li>Vào mục <strong>Settings</strong> của repository -> Chọn <strong>Pages</strong> ở menu bên trái.</li>
+            <li>Tại phần <strong>Build and deployment</strong>, chọn Branch là <code>main</code> (hoặc <code>master</code>) và folder là <code>/ (root)</code>, sau đó bấm <strong>Save</strong>.</li>
+            <li>Chờ 1-2 phút, GitHub sẽ cung cấp cho bạn một link web tĩnh (ví dụ: <code>https://username.github.io/repo-name/</code>) để sử dụng online bất kỳ lúc nào!</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>Ứng dụng được thiết kế cho mục đích học tập cá nhân. Vui lòng tôn trọng bản quyền của tác giả truyện.</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
