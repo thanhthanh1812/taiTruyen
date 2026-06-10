@@ -172,8 +172,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let fileName = fileNameInput.value.trim();
     let proxyUrl = proxyUrlInput.value.trim();
 
-    if (!cookieName || !cookieValue || !storyId || isNaN(totalPages) || !fileName || !proxyUrl) {
-      log('Vui lòng điền đầy đủ tất cả các trường cấu hình!', 'error');
+    if (!cookieName || !cookieValue || !storyId || isNaN(totalPages) || !fileName) {
+      log('Vui lòng điền đầy đủ thông tin Cookie, ID truyện, Số trang và Tên file!', 'error');
       return;
     }
 
@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fileName = fileName.replace(/[\/\\]/g, '_');
 
     // Standardize proxy URL (remove trailing slash)
-    if (proxyUrl.endsWith('/')) {
+    if (proxyUrl && proxyUrl.endsWith('/')) {
       proxyUrl = proxyUrl.slice(0, -1);
     }
 
@@ -206,8 +206,21 @@ document.addEventListener('DOMContentLoaded', () => {
     log(`Bắt đầu quá trình tải truyện (ID: ${storyId}, Tổng số trang: ${totalPages})...`, 'info');
 
     try {
-      const headers = {
-        'X-Cookie': `${cookieName}=${cookieValue}`
+      // Setup fetch options depending on whether Proxy is used or not
+      const getFetchOptions = () => {
+        if (proxyUrl) {
+          return {
+            headers: {
+              'X-Cookie': `${cookieName}=${cookieValue}`
+            }
+          };
+        } else {
+          // When sending directly, use include credentials to send browser session cookies
+          // This requires user to enable a browser CORS extension
+          return {
+            credentials: 'include'
+          };
+        }
       };
 
       // --- BƯỚC 1: Lấy danh sách ID chương ---
@@ -218,10 +231,10 @@ document.addEventListener('DOMContentLoaded', () => {
         log(`Đang quét trang ${page}/${totalPages}...`, 'info');
         
         const targetUrl = `https://truyenhdc.com/user/quan-ly-truyen/dsc/?id=${storyId}&n=${page}`;
-        const requestUrl = `${proxyUrl}?url=${encodeURIComponent(targetUrl)}`;
+        const requestUrl = proxyUrl ? `${proxyUrl}?url=${encodeURIComponent(targetUrl)}` : targetUrl;
 
         try {
-          const res = await fetch(requestUrl, { headers });
+          const res = await fetch(requestUrl, getFetchOptions());
           if (!res.ok) {
             throw new Error(`Mã lỗi HTTP: ${res.status}`);
           }
@@ -281,10 +294,10 @@ document.addEventListener('DOMContentLoaded', () => {
         log(`[${currentIdx}/${chapterIds.length}] Đang tải chương ID: ${cId}...`, 'info');
 
         const targetUrl = `https://truyenhdc.com/user/quan-ly-truyen/edit-chuong/?id=${cId}`;
-        const requestUrl = `${proxyUrl}?url=${encodeURIComponent(targetUrl)}`;
+        const requestUrl = proxyUrl ? `${proxyUrl}?url=${encodeURIComponent(targetUrl)}` : targetUrl;
 
         try {
-          const res = await fetch(requestUrl, { headers });
+          const res = await fetch(requestUrl, getFetchOptions());
           if (!res.ok) {
             throw new Error(`HTTP Error: ${res.status}`);
           }

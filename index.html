@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trình Tải Truyện Hùng Bá - Giao Diện Web</title>
+  <title>Tool tải truyện HD</title>
   <link rel="stylesheet" href="style.css">
   <!-- Import docx.js library from CDN -->
   <script src="https://cdn.jsdelivr.net/npm/docx@8.2.0/build/index.umd.min.js"></script>
@@ -12,12 +12,12 @@
 
   <div class="container">
     <header>
-      <h1>TruyenHDC Downloader</h1>
+      <h1>Tool tải truyện HD</h1>
       <p>Tải truyện từ trang quản lý truyện sang file Word (.docx) trực tiếp trên trình duyệt</p>
     </header>
 
     <div class="card">
-      <div class="card-title">Cấu Hình Tải Truyện</div>
+      <div class="card-title">Cấu Hinh Tải Truyện</div>
       
       <form id="crawlerForm" onsubmit="event.preventDefault();">
         <div class="form-grid">
@@ -48,8 +48,8 @@
           </div>
 
           <div class="form-group">
-            <label for="proxyUrl">Địa chỉ CORS Proxy (Cloudflare Worker URL)</label>
-            <input type="url" id="proxyUrl" placeholder="Ví dụ: https://my-proxy.yourname.workers.dev" required>
+            <label for="proxyUrl">Địa chỉ CORS Proxy (Cloudflare Worker URL - Không bắt buộc)</label>
+            <input type="url" id="proxyUrl" placeholder="Bỏ trống nếu sử dụng Extension bypass CORS">
           </div>
 
         </div>
@@ -82,17 +82,26 @@
     <!-- Instructions Accordion -->
     <div class="accordion" id="instructionAccordion">
       <div class="accordion-header">
-        <h3>Hướng dẫn thiết lập Proxy & Lấy Cookie</h3>
+        <h3>Hướng dẫn thiết lập CORS & Lấy Cookie</h3>
         <span class="accordion-icon">▼</span>
       </div>
       <div class="accordion-content">
         <div class="instructions-body">
-          <h4>Bước 1: Tạo Cloudflare Worker làm Proxy (Bắt buộc để vượt lỗi CORS)</h4>
-          <p>Vì trình duyệt chặn các request trực tiếp đến domain khác (CORS) và không cho tự set Cookie, bạn cần tạo 1 Cloudflare Worker làm trung chuyển (hoàn toàn miễn phí):</p>
+          <h4>Bước 1: Giải quyết rào cản CORS (2 cách lựa chọn)</h4>
+          <p>Trình duyệt mặc định sẽ chặn các request trực tiếp đến domain khác (CORS) từ trang web tĩnh. Bạn hãy chọn 1 trong 2 cách sau:</p>
+          
+          <h5 style="margin-top: 0.5rem; font-weight: 600; color: var(--text-main);">Cách 1: Sử dụng Extension trình duyệt (Đơn giản nhất - Khuyên dùng)</h5>
+          <ul>
+            <li>Cài đặt một extension hỗ trợ tắt CORS trên trình duyệt máy tính của bạn (Ví dụ: <strong>Allow CORS: Access-Control-Allow-Origin</strong> hoặc <strong>CORS Unblock</strong>).</li>
+            <li>Bật extension lên (biểu tượng extension sẽ sáng màu cam/xanh).</li>
+            <li>Để trống ô <strong>Địa chỉ CORS Proxy</strong> trên giao diện và thực hiện tải truyện.</li>
+          </ul>
+
+          <h5 style="margin-top: 0.5rem; font-weight: 600; color: var(--text-main);">Cách 2: Sử dụng Cloudflare Worker Proxy (Khi dùng trên điện thoại hoặc không cài extension)</h5>
           <ol>
-            <li>Truy cập <a href="https://dash.cloudflare.com/" target="_blank">Cloudflare Dashboard</a> và đăng nhập (hoặc đăng ký miễn phí).</li>
+            <li>Truy cập <a href="https://dash.cloudflare.com/" target="_blank">Cloudflare Dashboard</a> và đăng ký/đăng nhập miễn phí.</li>
             <li>Chọn <strong>Workers & Pages</strong> -> Click <strong>Create application</strong> -> <strong>Create Worker</strong>.</li>
-            <li>Đặt tên cho Worker của bạn (ví dụ: <code>truyen-proxy</code>) rồi bấm <strong>Deploy</strong>.</li>
+            <li>Đặt tên cho Worker của bạn rồi bấm <strong>Deploy</strong>.</li>
             <li>Sau khi deploy, bấm vào nút <strong>Edit code</strong>.</li>
             <li>Copy toàn bộ đoạn code dưới đây và dán đè vào file <code>worker.js</code> trong giao diện Cloudflare:</li>
           </ol>
@@ -104,7 +113,7 @@
 
           <ol start="6">
             <li>Bấm nút <strong>Save and deploy</strong> ở góc trên bên phải màn hình Cloudflare.</li>
-            <li>Copy đường dẫn URL của Worker (ví dụ: <code>https://truyen-proxy.account.workers.dev</code>) và dán vào ô <strong>Địa chỉ CORS Proxy</strong> trên giao diện web này.</li>
+            <li>Copy đường dẫn URL của Worker (ví dụ: <code>https://xxx.xxx.workers.dev</code>) và dán vào ô <strong>Địa chỉ CORS Proxy</strong>.</li>
           </ol>
 
           <h4>Bước 2: Cách lấy Cookie từ trình duyệt</h4>
@@ -126,7 +135,7 @@
             <li>Tạo một repository mới trên GitHub và upload các file (<code>index.html</code>, <code>style.css</code>, <code>app.js</code>) lên.</li>
             <li>Vào mục <strong>Settings</strong> của repository -> Chọn <strong>Pages</strong> ở menu bên trái.</li>
             <li>Tại phần <strong>Build and deployment</strong>, chọn Branch là <code>main</code> (hoặc <code>master</code>) và folder là <code>/ (root)</code>, sau đó bấm <strong>Save</strong>.</li>
-            <li>Chờ 1-2 phút, GitHub sẽ cung cấp cho bạn một link web tĩnh (ví dụ: <code>https://username.github.io/repo-name/</code>) để sử dụng online bất kỳ lúc nào!</li>
+            <li>Chờ 1-2 phút, GitHub sẽ cung cấp cho bạn một link web tĩnh để sử dụng online bất kỳ lúc nào!</li>
           </ol>
         </div>
       </div>
