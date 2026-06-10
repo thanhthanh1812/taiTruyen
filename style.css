@@ -426,29 +426,35 @@ footer a:hover {
   font-size: 0.85rem;
   padding: 0.5rem 1rem;
   border-radius: 8px;
-  margin-top: 0;
+  margin-top: 1rem;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   text-align: left;
 }
 
 .ib-btn {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
   display: inline-flex;
   align-items: center;
-  background-color: #1877f2;
+  background-color: #ec4899; /* Pink */
   color: #ffffff;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  font-size: 0.85rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 9999px;
+  font-size: 0.825rem;
   font-weight: 600;
   text-decoration: none;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  transition: background-color 0.15s ease, transform 0.1s ease;
+  box-shadow: 0 4px 6px -1px rgba(236, 72, 153, 0.2), 0 2px 4px -2px rgba(236, 72, 153, 0.2);
+  transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
 }
 
 .ib-btn:hover {
-  background-color: #166fe5;
+  background-color: #db2777; /* Darker pink */
+  transform: translateY(-1px);
+  box-shadow: 0 10px 15px -3px rgba(236, 72, 153, 0.25), 0 4px 6px -4px rgba(236, 72, 153, 0.25);
 }
 
 .ib-btn:active {
-  transform: scale(0.98);
+  transform: translateY(0) scale(0.98);
 }

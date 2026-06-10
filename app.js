@@ -237,7 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btnText.textContent = 'Đang tải truyện...';
     consoleStatusDot.className = 'console-dot'; // Green pulsating state (default success-color class is active)
     
-    log(`Bắt đầu quá trình tải truyện (ID: ${storyId}, Tổng số trang: ${totalPages}) | Phiên bản Tool: v1.0.7 - ESM...`, 'info');
+    log(`Bắt đầu quá trình tải truyện (ID: ${storyId}, Tổng số trang: ${totalPages}) | Phiên bản Tool: v1.0.8 - ESM...`, 'info');
 
     try {
       // Setup fetch options depending on whether Proxy is used or not
