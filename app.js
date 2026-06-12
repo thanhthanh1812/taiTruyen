@@ -90,13 +90,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const useProxyCheckbox = document.getElementById('useProxy');
   const proxyUrlGroup = document.getElementById('proxyUrlGroup');
   const proxyUrlInput = document.getElementById('proxyUrl');
-  
+
   const downloadBtn = document.getElementById('downloadBtn');
   const btnText = document.getElementById('btnText');
   const clearConsoleBtn = document.getElementById('clearConsoleBtn');
   const consoleBody = document.getElementById('consoleBody');
   const consoleStatusDot = document.getElementById('consoleStatusDot');
-  
+
   const accordion = document.getElementById('instructionAccordion');
   const copyWorkerCodeBtn = document.getElementById('copyWorkerCodeBtn');
   const workerCodeBlock = document.getElementById('workerCodeBlock');
@@ -166,11 +166,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function log(message, type = 'info') {
     const line = document.createElement('span');
     line.className = `console-line ${type}`;
-    
+
     // Add timestamp
     const now = new Date();
     const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
-    
+
     line.textContent = `[${timeStr}] ${message}\n`;
     consoleBody.appendChild(line);
     consoleBody.scrollTop = consoleBody.scrollHeight;
@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
     downloadBtn.classList.add('loading');
     btnText.textContent = 'Đang tải truyện...';
     consoleStatusDot.className = 'console-dot'; // Green pulsating state (default success-color class is active)
-    
+
     log(`Bắt đầu quá trình tải truyện (ID: ${storyId}, Tổng số trang: ${totalPages}) | Phiên bản Tool: v1.0.8 - ESM...`, 'info');
 
     try {
@@ -263,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       for (let page = 1; page <= totalPages; page++) {
         log(`Đang quét trang ${page}/${totalPages}...`, 'info');
-        
+
         const targetUrl = `https://truyenhdc.com/user/quan-ly-truyen/dsc/?id=${storyId}&n=${page}`;
         const requestUrl = proxyUrl ? `${proxyUrl}?url=${encodeURIComponent(targetUrl)}` : targetUrl;
 
@@ -273,11 +273,11 @@ document.addEventListener('DOMContentLoaded', () => {
             throw new Error(`Mã lỗi HTTP: ${res.status}`);
           }
           const htmlText = await res.text();
-          
+
           // Parse HTML content
           const parser = new DOMParser();
           const docHTML = parser.parseFromString(htmlText, 'text/html');
-          
+
           const listGroup = docHTML.getElementById('dsc');
           if (!listGroup) {
             const pageTitle = docHTML.title || 'Không có tiêu đề';
@@ -289,7 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
               bodyText = 'Không tìm thấy thẻ body';
             }
-            
+
             log(`[Lỗi] Không tìm thấy danh sách chương (#dsc) tại trang ${page}.`, 'error');
             log(`[Chi tiết phản hồi] HTTP: ${res.status} | Tiêu đề trang: "${pageTitle}" | Độ dài HTML: ${htmlText.length} ký tự.`, 'warning');
             log(`[Xem trước nội dung]: "${bodyText}..."`, 'warning');
@@ -314,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
           });
 
           log(`Trang ${page}: Tìm thấy ${foundInPage} chương.`, 'debug');
-          
+
         } catch (err) {
           log(`Lỗi khi quét trang ${page}: ${err.message}`, 'error');
         }
@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
       for (let i = 0; i < chapterIds.length; i++) {
         const cId = chapterIds[i];
         const currentIdx = i + 1;
-        
+
         log(`[${currentIdx}/${chapterIds.length}] Đang tải chương ID: ${cId}...`, 'info');
 
         const targetUrl = `https://truyenhdc.com/user/quan-ly-truyen/edit-chuong/?id=${cId}`;
@@ -363,12 +363,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
           if (contentDiv) {
             const clone = contentDiv.cloneNode(true);
-            
+
             // Replace <br> with newlines
             clone.querySelectorAll('br').forEach(br => {
               br.replaceWith('\n');
             });
-            
+
             // Add newline after paragraphs
             clone.querySelectorAll('p').forEach(p => {
               p.appendChild(document.createTextNode('\n'));
@@ -385,9 +385,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (err) {
           log(`[${currentIdx}/${chapterIds.length}] Lỗi khi tải chương ID ${cId}: ${err.message}`, 'error');
-          chaptersData.push({ 
-            title: `Chương ID ${cId} (Lỗi)`, 
-            content: `[Gặp lỗi trong quá trình tải chương này: ${err.message}]` 
+          chaptersData.push({
+            title: `Chương ID ${cId} (Lỗi)`,
+            content: `[Gặp lỗi trong quá trình tải chương này: ${err.message}]`
           });
         }
 
@@ -397,7 +397,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // --- BƯỚC 3: Tạo và xuất file Word .docx ---
       log('Đang khởi tạo cấu trúc tài liệu Word...', 'info');
-      
+
       const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } = docx;
       const docElements = [];
 
@@ -451,9 +451,9 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       log('Đang kết xuất và đóng gói file Word...', 'info');
-      
+
       const blob = await Packer.toBlob(doc);
-      
+
       log(`Chuẩn bị tải xuống file: ${fileName}`, 'info');
 
       // Trigger browser download
@@ -463,7 +463,7 @@ document.addEventListener('DOMContentLoaded', () => {
       tempLink.download = fileName;
       document.body.appendChild(tempLink);
       tempLink.click();
-      
+
       // Cleanup
       document.body.removeChild(tempLink);
       URL.revokeObjectURL(downloadUrl);

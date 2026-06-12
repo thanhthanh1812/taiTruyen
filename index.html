@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tool tải truyện HD</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
   <!-- Floating Help Button -->
@@ -16,18 +18,20 @@
   <div class="container">
     <header>
       <h1>Tool tải truyện HD</h1>
-      <p>Tải truyện từ trang quản lý truyện sang file Word (.docx) trực tiếp trên trình duyệt <span class="version-badge">v1.0.8</span></p>
+      <p>Tải truyện từ trang quản lý truyện sang file Word (.docx) trực tiếp trên trình duyệt <span
+          class="version-badge">v1.0.8</span></p>
       <div class="note-banner">
-        <strong>Lưu ý:</strong> Tool chỉ hỗ trợ tải những bộ truyện do chính tài khoản của bạn đăng tải trên trang quản lý.
+        <strong>Lưu ý:</strong> Tool chỉ hỗ trợ tải những bộ truyện do chính tài khoản của bạn đăng tải trên trang quản
+        lý.
       </div>
     </header>
 
     <div class="card">
       <div class="card-title">Cấu Hinh Tải Truyện</div>
-      
+
       <form id="crawlerForm" onsubmit="event.preventDefault();">
         <div class="form-grid">
-          
+
           <div class="form-group">
             <label for="cookieName">Tên Cookie (Cookie Name)</label>
             <input type="text" id="cookieName" placeholder="Ví dụ: wordpress_logged_in_fc056e1f7bf1..." required>
@@ -53,9 +57,11 @@
             <input type="text" id="fileName" placeholder="Ví dụ: Truyen_Hay.docx" required>
           </div>
 
-          <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; height: 100%; padding-top: 1.7rem;">
+          <div class="form-group"
+            style="display: flex; align-items: center; gap: 0.5rem; height: 100%; padding-top: 1.7rem;">
             <input type="checkbox" id="useProxy" style="width: 18px; height: 18px; cursor: pointer; margin: 0;">
-            <label for="useProxy" style="margin-bottom: 0; cursor: pointer; user-select: none; font-weight: 500;">Sử dụng CORS Proxy (Cloudflare)</label>
+            <label for="useProxy" style="margin-bottom: 0; cursor: pointer; user-select: none; font-weight: 500;">Sử
+              dụng CORS Proxy (Cloudflare)</label>
           </div>
 
           <div class="form-group full-width" id="proxyUrlGroup" style="display: none;">
@@ -85,7 +91,7 @@
       </div>
       <div class="console-container">
         <div id="consoleBody" class="console-body">
-<span class="console-line info">[Hệ thống] Sẵn sàng. Nhập thông tin cấu hình và nhấn nút để bắt đầu.</span>
+          <span class="console-line info">[Hệ thống] Sẵn sàng. Nhập thông tin cấu hình và nhấn nút để bắt đầu.</span>
         </div>
       </div>
     </div>
@@ -99,22 +105,29 @@
       <div class="accordion-content">
         <div class="instructions-body">
           <h4>Bước 1: Giải quyết rào cản CORS (2 cách lựa chọn)</h4>
-          <p>Trình duyệt mặc định sẽ chặn các request trực tiếp đến domain khác (CORS) từ trang web tĩnh. Bạn hãy chọn 1 trong 2 cách sau:</p>
-          
-          <h5 style="margin-top: 0.5rem; font-weight: 600; color: var(--text-main);">Cách 1: Sử dụng Extension trình duyệt (Đơn giản nhất - Khuyên dùng)</h5>
+          <p>Trình duyệt mặc định sẽ chặn các request trực tiếp đến domain khác (CORS) từ trang web tĩnh. Bạn hãy chọn 1
+            trong 2 cách sau:</p>
+
+          <h5 style="margin-top: 0.5rem; font-weight: 600; color: var(--text-main);">Cách 1: Sử dụng Extension trình
+            duyệt (Đơn giản nhất - Khuyên dùng)</h5>
           <ul>
-            <li>Cài đặt một extension hỗ trợ tắt CORS trên trình duyệt máy tính của bạn (Ví dụ: <strong>Allow CORS: Access-Control-Allow-Origin</strong> hoặc <strong>CORS Unblock</strong>).</li>
+            <li>Cài đặt một extension hỗ trợ tắt CORS trên trình duyệt máy tính của bạn (Ví dụ: <strong>Allow CORS:
+                Access-Control-Allow-Origin</strong> hoặc <strong>CORS Unblock</strong>).</li>
             <li>Bật extension lên (biểu tượng extension sẽ sáng màu cam/xanh).</li>
             <li>Để trống ô <strong>Địa chỉ CORS Proxy</strong> trên giao diện và thực hiện tải truyện.</li>
           </ul>
 
-          <h5 style="margin-top: 0.5rem; font-weight: 600; color: var(--text-main);">Cách 2: Sử dụng Cloudflare Worker Proxy (Khi dùng trên điện thoại hoặc không cài extension)</h5>
+          <h5 style="margin-top: 0.5rem; font-weight: 600; color: var(--text-main);">Cách 2: Sử dụng Cloudflare Worker
+            Proxy (Khi dùng trên điện thoại hoặc không cài extension)</h5>
           <ol>
-            <li>Truy cập <a href="https://dash.cloudflare.com/" target="_blank">Cloudflare Dashboard</a> và đăng ký/đăng nhập miễn phí.</li>
-            <li>Chọn <strong>Workers & Pages</strong> -> Click <strong>Create application</strong> -> <strong>Create Worker</strong>.</li>
+            <li>Truy cập <a href="https://dash.cloudflare.com/" target="_blank">Cloudflare Dashboard</a> và đăng ký/đăng
+              nhập miễn phí.</li>
+            <li>Chọn <strong>Workers & Pages</strong> -> Click <strong>Create application</strong> -> <strong>Create
+                Worker</strong>.</li>
             <li>Đặt tên cho Worker của bạn rồi bấm <strong>Deploy</strong>.</li>
             <li>Sau khi deploy, bấm vào nút <strong>Edit code</strong>.</li>
-            <li>Copy toàn bộ đoạn code dưới đây và dán đè vào file <code>worker.js</code> trong giao diện Cloudflare:</li>
+            <li>Copy toàn bộ đoạn code dưới đây và dán đè vào file <code>worker.js</code> trong giao diện Cloudflare:
+            </li>
           </ol>
 
           <div class="code-block-container">
@@ -124,18 +137,21 @@
 
           <ol start="6">
             <li>Bấm nút <strong>Save and deploy</strong> ở góc trên bên phải màn hình Cloudflare.</li>
-            <li>Copy đường dẫn URL của Worker (ví dụ: <code>https://xxx.xxx.workers.dev</code>) và dán vào ô <strong>Địa chỉ CORS Proxy</strong>.</li>
+            <li>Copy đường dẫn URL của Worker (ví dụ: <code>https://xxx.xxx.workers.dev</code>) và dán vào ô <strong>Địa
+                chỉ CORS Proxy</strong>.</li>
           </ol>
 
           <h4>Bước 2: Cách lấy Cookie từ trình duyệt</h4>
           <ol>
             <li>Truy cập trang web <strong>truyenhdc.com</strong> và đăng nhập tài khoản của bạn.</li>
             <li>Nhấn phím <code>F12</code> (hoặc chuột phải -> <code>Inspect / Kiểm tra</code>) để mở DevTools.</li>
-            <li>Chuyển qua tab <strong>Application</strong> (trên Chrome/Edge) hoặc tab <strong>Storage</strong> (trên Firefox).</li>
+            <li>Chuyển qua tab <strong>Application</strong> (trên Chrome/Edge) hoặc tab <strong>Storage</strong> (trên
+              Firefox).</li>
             <li>Ở menu bên trái, tìm mục <strong>Cookies</strong> và chọn <code>https://truyenhdc.com</code>.</li>
             <li>Tìm Cookie có tên bắt đầu bằng <code>wordpress_logged_in_...</code>:
               <ul>
-                <li>Copy tên đó (ví dụ: <code>wordpress_logged_in_fc056e1f7bf1317b0c2c528e1dc3e0ac</code>) dán vào ô <strong>Tên Cookie</strong>.</li>
+                <li>Copy tên đó (ví dụ: <code>wordpress_logged_in_fc056e1f7bf1317b0c2c528e1dc3e0ac</code>) dán vào ô
+                  <strong>Tên Cookie</strong>.</li>
                 <li>Copy giá trị dài ngoằng của Cookie đó dán vào ô <strong>Giá trị Cookie</strong>.</li>
               </ul>
             </li>
@@ -143,9 +159,11 @@
 
           <h4>Bước 3: Deploy web lên GitHub Pages</h4>
           <ol>
-            <li>Tạo một repository mới trên GitHub và upload các file (<code>index.html</code>, <code>style.css</code>, <code>app.js</code>) lên.</li>
+            <li>Tạo một repository mới trên GitHub và upload các file (<code>index.html</code>, <code>style.css</code>,
+              <code>app.js</code>) lên.</li>
             <li>Vào mục <strong>Settings</strong> của repository -> Chọn <strong>Pages</strong> ở menu bên trái.</li>
-            <li>Tại phần <strong>Build and deployment</strong>, chọn Branch là <code>main</code> (hoặc <code>master</code>) và folder là <code>/ (root)</code>, sau đó bấm <strong>Save</strong>.</li>
+            <li>Tại phần <strong>Build and deployment</strong>, chọn Branch là <code>main</code> (hoặc
+              <code>master</code>) và folder là <code>/ (root)</code>, sau đó bấm <strong>Save</strong>.</li>
             <li>Chờ 1-2 phút, GitHub sẽ cung cấp cho bạn một link web tĩnh để sử dụng online bất kỳ lúc nào!</li>
           </ol>
         </div>
@@ -157,4 +175,5 @@
 
   <script type="module" src="app.js?v=1.0.8"></script>
 </body>
+
 </html>
